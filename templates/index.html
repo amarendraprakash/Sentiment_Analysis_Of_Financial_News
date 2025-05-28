@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial News Sentiment Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+            text-align: center;
+        }
+        .sentiment-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .sentiment-box {
+            background-color: #e9ecef;
+            padding: 15px 20px;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+            margin: 10px;
+            min-width: 150px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .sentiment-box.positive { background-color: #d4edda; color: #155724; }
+        .sentiment-box.negative { background-color: #f8d7da; color: #721c24; }
+        .sentiment-box.neutral { background-color: #ffeeba; color: #856404; }
+
+        .sentiment-box h3 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        .sentiment-box p {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        .news-section {
+            margin-top: 40px;
+        }
+        .news-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .news-item p {
+            margin: 0 0 10px 0;
+        }
+        .news-item .score {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Financial News Sentiment Analysis</h1>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% else %}
+            <p style="text-align: center;">Total News Articles Analyzed: <strong>{{ total_news }}</strong></p>
+            <div class="sentiment-summary">
+                <div class="sentiment-box positive">
+                    <h3>Positive</h3>
+                    <p>{{ sentiment_distribution.Positive | default(0) }}</p>
+                </div>
+                <div class="sentiment-box negative">
+                    <h3>Negative</h3>
+                    <p>{{ sentiment_distribution.Negative | default(0) }}</p>
+                </div>
+                <div class="sentiment-box neutral">
+                    <h3>Neutral</h3>
+                    <p>{{ sentiment_distribution.Neutral | default(0) }}</p>
+                </div>
+            </div>
+
+            <div class="news-section">
+                <h2>Example Positive News</h2>
+                {% if positive_news %}
+                    {% for news in positive_news %}
+                        <div class="news-item">
+                            <p>{{ news.News_Text }}</p>
+                            <p class="score"><strong>Predicted:</strong> {{ news.Predicted_Sentiment }} | <strong>Compound Score:</strong> {{ "%.2f"|format(news.VADER_Compound) }}</p>
+                            <p class="score"><strong>Original Label:</strong> {{ news.Original_Sentiment }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No positive news examples found.</p>
+                {% endif %}
+            </div>
+
+            <div class="news-section">
+                <h2>Example Negative News</h2>
+                {% if negative_news %}
+                    {% for news in negative_news %}
+                        <div class="news-item">
+                            <p>{{ news.News_Text }}</p>
+                            <p class="score"><strong>Predicted:</strong> {{ news.Predicted_Sentiment }} | <strong>Compound Score:</strong> {{ "%.2f"|format(news.VADER_Compound) }}</p>
+                            <p class="score"><strong>Original Label:</strong> {{ news.Original_Sentiment }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No negative news examples found.</p>
+                {% endif %}
+            </div>
+
+            <div class="news-section">
+                <h2>Example Neutral News</h2>
+                {% if neutral_news %}
+                    {% for news in neutral_news %}
+                        <div class="news-item">
+                            <p>{{ news.News_Text }}</p>
+                            <p class="score"><strong>Predicted:</strong> {{ news.Predicted_Sentiment }} | <strong>Compound Score:</strong> {{ "%.2f"|format(news.VADER_Compound) }}</p>
+                            <p class="score"><strong>Original Label:</strong> {{ news.Original_Sentiment }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No neutral news examples found.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
