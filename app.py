@@ -39,7 +39,7 @@ def analyze_sentiment(news_text):
 def index():
     try:
         # Load the CSV file with 'latin1' encoding to handle potential character issues
-        df = pd.read_csv('all-data.csv', header=None, names=['Original_Sentiment', 'News_Text'], encoding='latin1')
+        df = pd.read_csv('/kaggle/sentiment-analysis-for-financial-news/all-data.csv', header=None, names=['Original_Sentiment', 'News_Text'], encoding='latin1')
 
         # Drop rows where 'News_Text' is NaN or empty
         df.dropna(subset=['News_Text'], inplace=True)
